@@ -15,10 +15,10 @@ print("Winrate as white:  " + str(100 * white.result / white.weight))
 print("")
 print("Number of games played as black: " + str(black.weight))
 print("Winrate as black:  " + str(100 * black.result / black.weight))
-userColor = input("enter \"White\" to inspect games as white or \"Black\" to inspect games as black: ")
-if userColor == "White":
+user_color = input("enter \"White\" to inspect games as white or \"Black\" to inspect games as black: ")
+if user_color == "White":
     history = white
-elif userColor == "Black":
+elif user_color == "Black":
     history = black
 else:
     raise Exception("Error: unrecognized color")
@@ -29,8 +29,8 @@ while history.children != []:
         print(node.color + " plays: " + node.move)
         print("Number of games played:  " + str(node.weight))
         print("Winrate:  " + str(100 * node.result / node.weight))
-    nextMove = input("Enter next move: ")
+    next_move = input("Enter next move: ")
     for node in history.children:
-        if node.move == nextMove:
+        if node.move == next_move:
             history = node
 print("End of history reached")
