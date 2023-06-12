@@ -3,6 +3,7 @@ import io
 from tree import *
 
 name = input("Enter lichess username: ")
+print("Downloading games of " + name)
 pgns = io.StringIO(requests.get('https://lichess.org/api/games/user/' + name).text)
 history = parse_games(pgns, name)
 
@@ -22,6 +23,7 @@ elif userColor == "Black":
 else:
     raise Exception("Error: unrecognized color")
 while history.children != []:
+    history.children.sort(key = lambda x: x.weight, reverse = True)
     for node in history.children:
         print("")
         print(node.color + " plays: " + node.move)
