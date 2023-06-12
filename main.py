@@ -3,7 +3,12 @@ import io
 from tree import *
 
 name = input("Enter lichess username: ")
-print("Downloading games of " + name)
+num_games = requests.get('https://lichess.org/api/user/' + name).json()["count"]["all"]
+
+print("Downloading " + str(num_games) + " games of " + name)
+download_time = int(num_games / 20) #lichess's api limits unauthenticated requests to 20 per second
+print("Estimated time to download: " + str(int(download_time / 60)) + " minutes and " + str(download_time % 60)  + " seconds")
+
 pgns = io.StringIO(requests.get('https://lichess.org/api/games/user/' + name).text)
 history = parse_games(pgns, name)
 
