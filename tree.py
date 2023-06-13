@@ -1,7 +1,6 @@
 import chess.pgn
 from fractions import Fraction
 
-#Todo combine move transpositions
 class ChessNode:
     def __init__(self, move, color, weight = 1):
         self.weight = weight
@@ -25,15 +24,16 @@ class ChessNode:
 
 #Parse a list of a user's pgns into a tree structure
 def parse_games(pgns, name):
-    #Add nodes for white and black
+    #Add separate subtrees for games where user plays white and games where user plays black
     tree_start = ChessNode("start", "None", 0)
     tree_start.children.append(ChessNode("White", "None", 0))
     tree_start.children.append(ChessNode("Black", "None", 0))
+    
     while (game := chess.pgn.read_game(pgns)) is not None:
         result_string = game.headers["Result"].split("-")[0]  #Results strings are formatted as "1/2-1/2", "1-0" etc where the white player is listed first
         result = .5 if result_string == "1/2" else int(result_string)
         
-        #go back to the start of the tree and invert score if player is playing black
+        #Return to start of tree
         current_node = tree_start
         if game.headers["White"] == name:
             current_node = tree_start.add_child("White", "None")
@@ -45,7 +45,7 @@ def parse_games(pgns, name):
         tree_start.add_result(result)
         current_node.add_result(result)
         
-        #Adding the moves from current game to tree
+        #Add moves from current game to tree
         color = "White"
         for move in game.mainline_moves():
             current_node = current_node.add_child(move.uci(), color)

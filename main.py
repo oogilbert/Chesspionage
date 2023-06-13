@@ -2,19 +2,21 @@ import requests
 import io
 from tree import *
 
+#Importing games
 name = input("Enter lichess username: ")
 num_games = requests.get('https://lichess.org/api/user/' + name).json()["count"]["all"]
 
-print("Downloading " + str(num_games) + " games of " + name)
+print("Downloading all " + str(num_games) + " games played by " + name)
 download_time = int(num_games / 20) #lichess's api limits unauthenticated requests to 20 per second
 print("Estimated time to download: " + str(int(download_time / 60)) + " minutes and " + str(download_time % 60)  + " seconds")
 
 pgns = io.StringIO(requests.get('https://lichess.org/api/games/user/' + name).text)
 history = parse_games(pgns, name)
 
-#Todo add a history explorer that doesn't require knowing chess notation
+#Exploring results
 white = history.children[0]
 black = history.children[1]
+print("")
 print("Number of games played as white: " + str(white.weight))
 print("Winrate as white:  " + str(100 * white.result / white.weight))
 print("")
