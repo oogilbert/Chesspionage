@@ -34,8 +34,7 @@ while history.children != []:
     for node in history.children:
         print("")
         print(node.color + " plays: " + node.move)
-        print("Number of games played:  " + str(node.weight))
-        print("Winrate:  " + str(int(100 * node.result / node.weight)) + "%")
+        print(str(int(100 * node.result / node.weight)) + "% winrate after " + str(node.weight) + " games played")
     next_move = input("Enter next move: ")
     for node in history.children:
         if node.move == next_move:
