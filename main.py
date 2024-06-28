@@ -1,17 +1,31 @@
 import requests
 import io
+import numpy as np
+import os
 from tree import *
 
-#Importing games
+#Importing games, check saved data first
+#Todo download new games of user
+history = {}
 name = input("Enter lichess username: ")
-num_games = requests.get('https://lichess.org/api/user/' + name).json()["count"]["all"]
 
-print("Downloading all " + str(num_games) + " games played by " + name)
-download_time = int(num_games / 20) #lichess's api limits unauthenticated requests to 20 per second
-print("Estimated time to download: " + str(int(download_time / 60)) + " minutes and " + str(download_time % 60)  + " seconds")
+saved_games = {}
+if os.path.isfile('data/games.npy'):
+    saved_games = np.load('data/games.npy', allow_pickle='true').item()
+if name in saved_games.keys():
+    history = saved_games[name]
+else:
+    num_games = requests.get('https://lichess.org/api/user/' + name).json()["count"]["all"]
+    
+    print("Downloading all " + str(num_games) + " games played by " + name)
+    download_time = int(num_games / 20) #lichess's api limits unauthenticated requests to 20 per second
+    print("Estimated time to download: " + str(int(download_time / 60)) + " minutes and " + str(download_time % 60)  + " seconds")
 
-pgns = io.StringIO(requests.get('https://lichess.org/api/games/user/' + name).text)
-history = parse_games(pgns, name)
+    pgns = io.StringIO(requests.get('https://lichess.org/api/games/user/' + name).text)
+    history = parse_games(pgns, name)
+    
+    saved_games[name] = history
+    np.save('data/games.npy', saved_games)
 
 #Exploring results
 white = history.children[0]
