@@ -10,8 +10,8 @@ history = {}
 name = input("Enter lichess username: ")
 
 saved_games = {}
-if os.path.isfile('data/games.npy'):
-    saved_games = np.load('data/games.npy', allow_pickle='true').item()
+if os.path.isfile('../data/games.npy'):
+    saved_games = np.load('../data/games.npy', allow_pickle='true').item()
 if name in saved_games.keys():
     history = saved_games[name]
 else:
@@ -25,7 +25,7 @@ else:
     history = parse_games(pgns, name)
     
     saved_games[name] = history
-    np.save('data/games.npy', saved_games)
+    np.save('../data/games.npy', saved_games)
 
 #Exploring results
 white = history.children[0]
@@ -44,6 +44,7 @@ elif user_color == "Black" or user_color == "black":
 else:
     raise Exception("Error: unrecognized color")
 while history.children != []:
+    print("-----------------------------------------------------")
     history.children.sort(key = lambda x: x.weight, reverse = True)
     for node in history.children:
         print("")
