@@ -30,6 +30,9 @@ else:
 #Exploring results
 white = history.children[0]
 black = history.children[1]
+if white.weight == 0 or black.weight == 0:
+    print("This user does not have enough games to analyze")
+    exit()
 print("")
 print("Number of games played as white: " + str(white.weight))
 print("Winrate as white:  " + str(int(100 * white.result / white.weight)) + "%")
